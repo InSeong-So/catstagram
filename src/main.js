@@ -1,6 +1,9 @@
 import '../assets/scss/index.scss';
-import { addBookmark, getBookmarkList } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
+
+(() => {
+  localStorage.setItem('cat_bookmark', JSON.stringify([]));
+})();
 
 const getCatImage = async () => {
   const response = await fetch('https://api.thecatapi.com/v1/images/search?size=full');
@@ -19,8 +22,8 @@ const createPin = async () => {
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = /* html */`
   <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id=${id} />
-    <label for=${id} key=${random}></label>
+    <input type="checkbox" id="cat-${id}" src="${url}" />
+    <label for="cat-${id}" key=${random}></label>
   </div>
   `;
   pin.classList.add('pin');
@@ -68,19 +71,14 @@ $('nav').addEventListener('click', async event => {
 
   if (event.target.matches('#saved')) {
     $main.classList.add('saved');
-    const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
-      { _id },
-    );
     const $content = /* html */`
     <div class="container">
     ${result.map(({ _id, url }, index) => /* html */`
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
-            <input type="checkbox" id="heart${index}" checked>
-            <label for="heart${index}" key=${_id}></label>
+            <input type="checkbox" id="cat-${index}" checked>
+            <label for="cat-${index}" key=${_id}></label>
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
       </div>`).join('')}
@@ -91,14 +89,19 @@ $('nav').addEventListener('click', async event => {
   }
 });
 
-$('main').addEventListener('click', async event => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key',
-    )}`,
-    { _id },
-  );
-  console.log('북마크에 저장되었습니다.');
+$('main').addEventListener('click', async ({ target }) => {
+  if (!target.matches('label[for^="cat-"]')) return;
+
+  const $targetElement = target.control;
+
+  const isSaved = !$targetElement.checked;
+  const id = $targetElement.getAttribute('id');
+  const src = $targetElement.getAttribute('src');
+
+  if (!isSaved) {
+    const bookmark = JSON.parse(localStorage.getItem('cat_bookmark'));
+    bookmark.push({ id, src });
+  }
+
+  console.log(`북마크${isSaved ? '에 저장' : '에서 삭제'}되었습니다.`);
 });

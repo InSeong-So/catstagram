@@ -35,8 +35,7 @@ svg {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 12%;
-  // max-height: ;
+  height: 711px;
 }
 
 main {
@@ -304,7 +303,7 @@ img {
 
 .container {
   padding: 0 30px;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .loading {
