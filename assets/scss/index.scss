@@ -1,3 +1,15 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700");
+
+:root {
+  --bg-blue: #362FE3;
+  --bg-pink: #BF6684;
+  --bg-purple: #9439E4;
+  --text-color: #333;
+  --highlight: #8F7BF6;
+  --radius: 40px;
+  --icon-size: 37px;
+}
+
 *,
 *:before,
 *:after {
@@ -11,6 +23,8 @@ body {
   color: var(--text-color);
   display: grid;
   justify-content: center;
+  overflow: hidden;
+  height: 100vh;
 }
 
 svg {
@@ -21,12 +35,15 @@ svg {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 12%;
+  // max-height: ;
 }
 
 main {
   display: flex;
   width: auto;
   margin-top: 2em;
+  height: 100%;
 }
 
 .saved {
@@ -285,6 +302,11 @@ img {
   gap: 40px;
 }
 
+.container {
+  padding: 0 30px;
+  overflow: scroll;
+}
+
 .loading {
   transition: all ease-in-out .2s;
   opacity: 1;
@@ -307,20 +329,6 @@ img {
 .hidden {
   opacity: 0;
   visibility: hidden;
-}
-
-//
-
-@import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700");
-
-:root {
-  --bg-blue: #362FE3;
-  --bg-pink: #BF6684;
-  --bg-purple: #9439E4;
-  --text-color: #333;
-  --highlight: #8F7BF6;
-  --radius: 40px;
-  --icon-size: 37px;
 }
 
 nav {
@@ -393,7 +401,6 @@ nav div.item input[type=radio]:checked+label::after {
 }
 
 @-webkit-keyframes explore {
-
   0%,
   100% {
     transform-origin: center;
@@ -406,7 +413,6 @@ nav div.item input[type=radio]:checked+label::after {
 }
 
 @keyframes explore {
-
   0%,
   100% {
     transform-origin: center;
@@ -440,7 +446,6 @@ input[type=radio]#explore:checked+label[for] svg path:nth-of-type(7) {
 }
 
 @-webkit-keyframes cartbtn {
-
   0%,
   100% {
     transform-origin: center;
@@ -466,7 +471,6 @@ input[type=radio]#explore:checked+label[for] svg path:nth-of-type(7) {
 }
 
 @keyframes cartbtn {
-
   0%,
   100% {
     transform-origin: center;
@@ -498,7 +502,6 @@ input[type=radio]#cartbtn:checked+label[for] svg path:nth-child(3) {
 }
 
 @-webkit-keyframes saved {
-
   0%,
   100% {
     transform-style: preserve-3d;
@@ -516,7 +519,6 @@ input[type=radio]#cartbtn:checked+label[for] svg path:nth-child(3) {
 }
 
 @keyframes saved {
-
   0%,
   100% {
     transform-style: preserve-3d;
@@ -539,7 +541,6 @@ input[type=radio]#saved:checked+label[for] svg path {
 }
 
 @-webkit-keyframes profile {
-
   0%,
   100% {
     transform-origin: bottom;
@@ -556,7 +557,6 @@ input[type=radio]#saved:checked+label[for] svg path {
 }
 
 @keyframes profile {
-
   0%,
   100% {
     transform-origin: bottom;

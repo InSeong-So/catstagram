@@ -2,20 +2,25 @@ import '../assets/scss/index.scss';
 import { addBookmark, getBookmarkList } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
 
-let globalIndex = 0;
+const getCatImage = async () => {
+  const response = await fetch('https://api.thecatapi.com/v1/images/search?size=full');
+  const data = await response.json();
+  return data[0];
+}
 
-const createPin = () => {
+const createPin = async () => {
   toggleLoading();
+  const { id, url } = await getCatImage();
   const pin = document.createElement('div');
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
   const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
+  image.src = url;
   buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = `
+  buttonWrapper.innerHTML = /* html */`
   <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" />
-    <label for="heart${globalIndex}" key=${random}></label>
+    <input type="checkbox" id=${id} />
+    <label for=${id} key=${random}></label>
   </div>
   `;
   pin.classList.add('pin');
@@ -25,22 +30,23 @@ const createPin = () => {
   return pin;
 };
 
-const loadMore = debounce(() => {
+const loadMore = debounce(async () => {
   const container = $('.container');
   const pinList = [];
   for (let i = 10; i > 0; i--) {
-    pinList.push(createPin(++globalIndex));
+    pinList.push(await createPin());
   }
   container.append(...pinList);
 }, 500);
 
 loadMore();
 
-window.addEventListener('scroll', () => {
+const $container = $('.container');
+
+$container.addEventListener('scroll', () => {
   const loader = $('.loader');
   if (loader === null) return;
-  if (loader.getBoundingClientRect().top > window.innerHeight) return;
-  loadMore();
+  if ($container.scrollTop + $container.clientHeight >= $container.scrollHeight) loadMore();
 });
 
 $('nav').addEventListener('click', async event => {
@@ -52,12 +58,11 @@ $('nav').addEventListener('click', async event => {
 
   if (event.target.matches('#explore')) {
     $main.classList.remove('saved');
-    $main.innerHTML = `
+    $main.innerHTML = /* html */`
       <div class="container"></div>
       <div class="loader"></div>
     `;
 
-    globalIndex = 0;
     loadMore();
   }
 
@@ -68,11 +73,9 @@ $('nav').addEventListener('click', async event => {
       'http://localhost:3000/api/user/bookmark',
       { _id },
     );
-    const $content = `
+    const $content = /* html */`
     <div class="container">
-    ${result
-      .map(
-        ({ _id, url }, index) => `
+    ${result.map(({ _id, url }, index) => /* html */`
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -80,9 +83,7 @@ $('nav').addEventListener('click', async event => {
             <label for="heart${index}" key=${_id}></label>
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
-      </div>`,
-      )
-      .join('')}
+      </div>`).join('')}
     </div>
     `;
 
